@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "RESS"
+version = "1.0.0"
+description = "SeisComP-dependent near real-time shear-wave splitting analysis."
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Ioannis Spingos", email = "ispingos@geol.uoa.gr" },
+    { name = "Vasilis Kapetanidis", email = "vkapetan@geol.uoa.gr"},
+    { name = "Angelos Zymvragakis", email = "azymvragakis@geol.uoa.gr" },
+    { name = "George Kaviris", email = "gkaviris@geol.uoa.gr"}
+]
+requires-python = ">=3.12"
+dynamic = ["dependencies"]
+
+[project.urls]
+Repository = "https://github.com/nkua-seismolab/RESS"
+Issues = "https://github.com/nkua-seismolab/RESS/issues"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["ress/requirements.txt"]}
+
+[project.scripts]
+ress = "ress.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ress*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["velocity_models", ".venv"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import ordering)
+    "UP",  # pyupgrade (modern syntax)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["ress"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+# keep collection out of the root-owned Postgres data dir (database/pg_data)
+testpaths = ["tests"]

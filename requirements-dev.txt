@@ -1,0 +1,8 @@
+-r ress/requirements.txt
+pre-commit
+ruff
+ipython
+pytest
+build
+httpx
+httpx2

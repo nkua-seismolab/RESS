@@ -1,0 +1,82 @@
+# Copy to a private configuration and set connection details for your SeisComP.
+# Paths are relative to the working directory. Unlisted options use defaults.
+seiscomp:
+  host: 127.0.0.1
+  database: mysql://sysop:sysop@127.0.0.1/seiscomp # Set locally or pass -d; never publish credentials.
+  wait_time: 60
+  reprocess: false
+sds:
+  # - if running with Docker: leave this as /data/archive as it is the archive's
+  #   path inside the container
+  # - if not using Docker: set it to your SDS archive
+  archive: /data/archive
+velocity_model:
+  path: velocity_models/model_rigo1996_half.nd
+waveform:
+  t_before: 10.0 # Seconds of data acquired before the pick time.
+  t_after: 60.0 # Seconds of data acquired after the pick time.
+  target_sampling_rate: 100.0
+  decimate: true
+  min_gap: 1.0 # s; gaps at least this long disqualify a stream.
+sws:
+  blacklist_stations: []
+  max_ain: 60.0 # Shear-wave window: maximum incidence angle (degrees).
+  min_tkf: 90.0 # Minimum takeoff angle; >90 ensures upgoing rays (degrees).
+  max_delay_ms: 400.0 # Maximum time-delay of the grid search.
+  snr_min: 3.0 # Minimum SNR for filter acceptance.
+  rotation_mode: ZRT # ZRT (backazimuth only) or LQT (with incidence angle).
+  # Bandpass filter bank [freqmin, freqmax] (Hz), Savage et al. (2010) Table 1.
+  filter_bank:
+    - [0.4, 4.0]
+    - [0.5, 5.0]
+    - [0.2, 7.5]
+    - [0.3, 3.0]
+    - [0.5, 4.0]
+    - [0.6, 3.0]
+    - [0.8, 6.0]
+    - [1.0, 3.0]
+    - [0.5, 2.5]
+    - [1.0, 8.0]
+    - [2.0, 3.0]
+    - [2.0, 6.0]
+    - [3.0, 8.0]
+    - [4.0, 10.0]
+    - [1.0, 10.0]
+    - [1.0, 20.0]
+    - [1.0, 8.0]
+    - [0.5, 10.0]
+    - [0.5, 20.0]
+    - [0.5, 8.0]
+  # Analysis window generation around the S pick (Teanby et al., 2004).
+  windows:
+    tbeg0: -0.50 # Earliest window start relative to S (s).
+    tbeg1: -0.10 # Latest window start (s).
+    tend0: 0.10 # Earliest window end (s).
+    tend1: 0.40 # Latest window end (s).
+    dtbeg: 0.05 # Step between window starts (s).
+    dtend: 0.01 # Step between window ends (s).
+    nbeg: 10 # Number of start points.
+    nend: 20 # Number of end points.
+  # Cluster analysis of window measurements (Teanby et al., 2004).
+  cluster:
+    linkage: ward # single, complete, average or ward.
+    k_max: 20
+    n_min: 10
+    ccrit: 3.2 # Duda-Hart critical value.
+  # Multi-filter consensus (disabled: best filter only).
+  consensus:
+    enabled: false
+    n_best_filters: 1
+    phi_tolerance: 15.0 # degrees
+    dt_tolerance: 0.020 # seconds
+  # Event-level quality weighting (Wuestefeld et al., 2010).
+  quality:
+    gamma: 0.75 # |Q| threshold for Good Split / Good Null.
+    omega1: 0.333 # Weight for the mean window quality; omega1 + omega2 must equal 1.
+    omega2: 0.667 # Weight for the best measurement quality.
+# Postgres connection settings live in .env (POSTGRES_USER/PASSWORD/DB/HOST/PORT).
+processing:
+  n_cores: -1 # Available cores, capped at four window-analysis processes.
+logging:
+  level: DEBUG
+  file: null

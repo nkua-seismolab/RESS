@@ -1,0 +1,10 @@
+scikit-learn
+obspy<=1.5
+pandas<=3.0
+numpy<2
+scipy<1.13
+pyyaml
+sqlalchemy>=2.0
+psycopg[binary]
+fastapi
+uvicorn
